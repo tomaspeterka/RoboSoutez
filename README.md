@@ -6,4 +6,4 @@
 - [ ] naprogramovat robůtka
 
 
-[Named Link](http://www.google.fr/ "Named link title")
+(http://www.google.fr/ "Named link title")
