@@ -18,9 +18,9 @@ right_motor = Motor(Port.A)
 medium_motor = Motor(Port.C)
 
 ## sensors
-length_sensor = UltrasonicSensor(Port.S3)
-line_sensor = ColorSensor(Port.S2)
-touch_sensor = TouchSensor(Port.S4)
+ultra_sensor = UltrasonicSensor(Port.S4)
+line_sensor = ColorSensor(Port.S3)
+# touch_sensor = TouchSensor(Port.S2)
 
 ## base
 base = DriveBase(left_motor, right_motor, wheel_diameter=42, axle_track=151)
@@ -29,24 +29,32 @@ base = DriveBase(left_motor, right_motor, wheel_diameter=42, axle_track=151)
 ### Calculate the light threshold. Choose values based on your measurements.
 BLACK = 6
 WHITE = 65
-threshold = (BLACK + WHITE) / 2
+THRESHOLD = (BLACK + WHITE) / 2
 PROPORTIONAL_GAIN = 0.7
+
+BASIC_SPEED = 300
+STROKE = 530
+GRAB_DOWN_SPEED = 300
+GRAB_UP_SPEED = 1000
+
+def measure_distance():
+    while True:
+        print(length_sensor.distance())
 
 def measure_stroke():
     medium_motor.reset_angle(0)
     while True:
         print(medium_motor.angle())
 
-def line_move():
-    while True:
-        deviation = threshold - line_sensor.reflection()
-        turn_rate = PROPORTIONAL_GAIN * deviation
-        #print(line_sensor.reflection(), " ", deviation, " ", turn_rate)
-        base.drive(100, turn_rate)
+def line_move(speed=BASIC_SPEED, proportional_gain=PROPORTIONAL_GAIN):
+    deviation = THRESHOLD - line_sensor.reflection()
+    turn_rate = PROPORTIONAL_GAIN * deviation
+    #print(line_sensor.reflection(), " ", deviation, " ", turn_rate)
+    base.drive(speed, turn_rate)
 
 def begin_down(boolean=False):
     if boolean == True:
-        medium_motor.run_angle(800, 530)
+        medium_motor.run_angle(GRAB_DOWN_SPEED, STROKE)
         print("finish")
 
 def press_to_start():
@@ -58,38 +66,43 @@ def press_to_start():
             break
 
 def first_grab():
-    medium_motor.reset_angle(530)
-    medium_motor.run_angle(1000, -530)
+    medium_motor.reset_angle(STROKE)
+    medium_motor.run_angle(GRAB_UP_SPEED, - STROKE)
     print(medium_motor.angle())
 
 def grab():
     medium_motor.reset_angle(0)
-    medium_motor.run_angle(200, 530)
+    medium_motor.run_angle(GRAB_DOWN_SPEED, STROKE)
 
     print(medium_motor.angle())
 
-    medium_motor.reset_angle(530)
-    medium_motor.run_angle(1000, -530)
+    medium_motor.reset_angle(STROKE)
+    medium_motor.run_angle(GRAB_UP_SPEED, - STROKE)
 
     print(medium_motor.angle())
 
-def
+def big_four():
+    first_grab()
+    for i in range(3):
+        while ev3.distance() < 280:
+            line_move()
+        grab()
 
 # Write your program here.
 def main():
     ev3.speaker.beep()
     base.reset()
-    begin_down(True) #True if wanted
-    press_to_start()
+    begin_down(False)   #True if wanted
+    while ultra_sensor.distance() > 40:
+        line_move()   ß ß ß
     first_grab()
-    wait(2000)
-    for i in range(7):
+    for i in range(2):
+        while ev3.distance() < 280:
+            line_move()
         grab()
-        wait(2000)
-    #line_move()
-    #ev3.screen.print(distance())
     ev3.speaker.beep()
 
 if __name__ == "__main__":
-    main()
-    #measure_stroke()
+    # main()
+    while True:
+        line_move()
