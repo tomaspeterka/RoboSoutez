@@ -73,6 +73,7 @@ def grab():
 
     print(medium_motor.angle())
 
+def
 
 # Write your program here.
 def main():
