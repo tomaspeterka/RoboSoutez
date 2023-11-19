@@ -1,6 +1,7 @@
 # RoboSoutěž
 
 ### ToDo:
-- [ ] vybrat princip fungovaní robůtka
-- [ ] postavit robůtka
+- [x] vybrat princip fungovaní robůtka
+- [x] postavit robůtka
 - [ ] naprogramovat robůtka
+- [ ] vyhrát RoboSoutěž 2023
